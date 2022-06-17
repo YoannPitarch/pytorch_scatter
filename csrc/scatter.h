@@ -2,15 +2,9 @@
 
 #include <torch/extension.h>
 
-#if (defined __cpp_inline_variables) || __cplusplus >= 201703L
-#define SCATTER_INLINE_VARIABLE inline
-#else
-#ifdef _MSC_VER
-#define SCATTER_INLINE_VARIABLE __declspec(selectany)
-#else
-#define SCATTER_INLINE_VARIABLE __attribute__((weak))
-#endif
-#endif
+#include "macros.h"
+
+
 
 namespace scatter {
 int64_t cuda_version() noexcept;
