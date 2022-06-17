@@ -4,6 +4,8 @@
 #include "cpu/scatter_cpu.h"
 #include "utils.h"
 
+ #include "extensions.h"
+
 #ifdef WITH_CUDA
 #include "cuda/scatter_cuda.h"
 #endif
@@ -16,7 +18,7 @@ PyMODINIT_FUNC PyInit__scatter_cpu(void) { return NULL; }
 #endif
 #endif
 
-torch::Tensor broadcast(torch::Tensor src, torch::Tensor other, int64_t dim) {
+SCATTER_API torch::Tensor broadcast(torch::Tensor src, torch::Tensor other, int64_t dim) {
   if (src.dim() == 1)
     for (auto i = 0; i < dim; i++)
       src = src.unsqueeze(0);
@@ -26,7 +28,7 @@ torch::Tensor broadcast(torch::Tensor src, torch::Tensor other, int64_t dim) {
   return src;
 }
 
-std::tuple<torch::Tensor, torch::optional<torch::Tensor>>
+SCATTER_API std::tuple<torch::Tensor, torch::optional<torch::Tensor>>
 scatter_fw(torch::Tensor src, torch::Tensor index, int64_t dim,
            torch::optional<torch::Tensor> optional_out,
            torch::optional<int64_t> dim_size, std::string reduce) {
@@ -226,25 +228,25 @@ public:
   }
 };
 
-torch::Tensor scatter_sum(torch::Tensor src, torch::Tensor index, int64_t dim,
+SCATTER_API torch::Tensor scatter_sum(torch::Tensor src, torch::Tensor index, int64_t dim,
                           torch::optional<torch::Tensor> optional_out,
                           torch::optional<int64_t> dim_size) {
   return ScatterSum::apply(src, index, dim, optional_out, dim_size)[0];
 }
 
-torch::Tensor scatter_mul(torch::Tensor src, torch::Tensor index, int64_t dim,
+SCATTER_API torch::Tensor scatter_mul(torch::Tensor src, torch::Tensor index, int64_t dim,
                           torch::optional<torch::Tensor> optional_out,
                           torch::optional<int64_t> dim_size) {
   return ScatterMul::apply(src, index, dim, optional_out, dim_size)[0];
 }
 
-torch::Tensor scatter_mean(torch::Tensor src, torch::Tensor index, int64_t dim,
+SCATTER_API torch::Tensor scatter_mean(torch::Tensor src, torch::Tensor index, int64_t dim,
                            torch::optional<torch::Tensor> optional_out,
                            torch::optional<int64_t> dim_size) {
   return ScatterMean::apply(src, index, dim, optional_out, dim_size)[0];
 }
 
-std::tuple<torch::Tensor, torch::Tensor>
+SCATTER_API std::tuple<torch::Tensor, torch::Tensor>
 scatter_min(torch::Tensor src, torch::Tensor index, int64_t dim,
             torch::optional<torch::Tensor> optional_out,
             torch::optional<int64_t> dim_size) {
@@ -253,7 +255,7 @@ scatter_min(torch::Tensor src, torch::Tensor index, int64_t dim,
 }
 
 std::tuple<torch::Tensor, torch::Tensor>
-scatter_max(torch::Tensor src, torch::Tensor index, int64_t dim,
+SCATTER_API scatter_max(torch::Tensor src, torch::Tensor index, int64_t dim,
             torch::optional<torch::Tensor> optional_out,
             torch::optional<int64_t> dim_size) {
   auto result = ScatterMax::apply(src, index, dim, optional_out, dim_size);
