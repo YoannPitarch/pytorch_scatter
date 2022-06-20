@@ -1,6 +1,9 @@
 #include <Python.h>
 #include <torch/script.h>
 
+#include "scatter.h"
+#include "macros.h"
+
 #ifdef WITH_CUDA
 #include <cuda.h>
 #endif
@@ -14,7 +17,7 @@ PyMODINIT_FUNC PyInit__version_cpu(void) { return NULL; }
 #endif
 
 namespace scatter {
-int64_t cuda_version() noexcept {
+SCATTER_API int64_t cuda_version() noexcept {
 #ifdef WITH_CUDA
   return CUDA_VERSION;
 #else

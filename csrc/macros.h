@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
-#if defined(torchcluster_EXPORTS)
+#if defined(torchscatter_EXPORTS)
 #define SCATTER_API __declspec(dllexport)
 #else
 #define SCATTER_API __declspec(dllimport)
